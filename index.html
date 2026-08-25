@@ -128,28 +128,35 @@
           <!-- TILES -->
           <template x-for="(_, i) in boards">
             <div @click="triggerTile(i)"
-              class="bg-[#1F3641] min-w-[96px] md:w-[140px] md:h-[140px] shadow-[inset_0_-8px_0_0_#10212A] rounded-[10px] min-h-[96px] cursor-pointer items-center flex justify-center">
+              class="bg-[#1F3641] min-w-[96px] md:w-[140px] md:h-[140px] shadow-[inset_0_-8px_0_0_#10212A] rounded-[10px] min-h-[96px] cursor-pointer items-center flex justify-center"
+              x-bind:class="{
+                'bg-[#F2B137]': winner === 'o' && patternWinner.includes(i), 
+                'bg-[#31C3BD]': winner === 'x' && patternWinner.includes(i), 
+              }">
               <!-- X/O -->
-              <div class="w-[40px] h-[40px] md:w-[63.5px] md:h-[63.5px]" x-bind:class="{
+              <div class="w-[40px] h-[40px] md:w-[63.5px] md:h-[63.5px] duration-200" x-bind:class="{
                 'opacity-0 hover:opacity-100' : boards[i] === null
               }">
-                <svg x-show="boards[i] === 'x'" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                <svg x-show="boards[i] === 'x'" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" x-bind:class="{
+                  'fill-[#31C3BD]' : winner === '' || !patternWinner.includes(i)
+                }">
                   <path
                     d="M15.002 1.147 32 18.145 48.998 1.147a3 3 0 0 1 4.243 0l9.612 9.612a3 3 0 0 1 0 4.243L45.855 32l16.998 16.998a3 3 0 0 1 0 4.243l-9.612 9.612a3 3 0 0 1-4.243 0L32 45.855 15.002 62.853a3 3 0 0 1-4.243 0L1.147 53.24a3 3 0 0 1 0-4.243L18.145 32 1.147 15.002a3 3 0 0 1 0-4.243l9.612-9.612a3 3 0 0 1 4.243 0Z"
-                    fill="#31C3BD" fill-rule="evenodd" />
+                    fill-rule="evenodd" />
                 </svg>
 
-                
+
                 <svg x-show="turn === 'x' && boards[i] === null" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
                   <path
                     d="M51.12 1.269c.511 0 1.023.195 1.414.586l9.611 9.611c.391.391.586.903.586 1.415s-.195 1.023-.586 1.414L44.441 32l17.704 17.705c.391.39.586.902.586 1.414 0 .512-.195 1.024-.586 1.415l-9.611 9.611c-.391.391-.903.586-1.415.586a1.994 1.994 0 0 1-1.414-.586L32 44.441 14.295 62.145c-.39.391-.902.586-1.414.586a1.994 1.994 0 0 1-1.415-.586l-9.611-9.611a1.994 1.994 0 0 1-.586-1.415c0-.512.195-1.023.586-1.414L19.559 32 1.855 14.295a1.994 1.994 0 0 1-.586-1.414c0-.512.195-1.024.586-1.415l9.611-9.611c.391-.391.903-.586 1.415-.586s1.023.195 1.414.586L32 19.559 49.705 1.855c.39-.391.902-.586 1.414-.586Z"
                     stroke="#31C3BD" stroke-width="2" fill="none" />
                 </svg>
 
-                <svg x-show="boards[i] === 'o'" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                <svg x-show="boards[i] === 'o'" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" x-bind:class="{
+                  'fill-[#F2B137]' : winner === '' || !patternWinner.includes(i)
+                }">
                   <path
-                    d="M32 0c17.673 0 32 14.327 32 32 0 17.673-14.327 32-32 32C14.327 64 0 49.673 0 32 0 14.327 14.327 0 32 0Zm0 18.963c-7.2 0-13.037 5.837-13.037 13.037 0 7.2 5.837 13.037 13.037 13.037 7.2 0 13.037-5.837 13.037-13.037 0-7.2-5.837-13.037-13.037-13.037Z"
-                    fill="#F2B137" />
+                    d="M32 0c17.673 0 32 14.327 32 32 0 17.673-14.327 32-32 32C14.327 64 0 49.673 0 32 0 14.327 14.327 0 32 0Zm0 18.963c-7.2 0-13.037 5.837-13.037 13.037 0 7.2 5.837 13.037 13.037 13.037 7.2 0 13.037-5.837 13.037-13.037 0-7.2-5.837-13.037-13.037-13.037Z" />
                 </svg>
 
                 <svg x-show="turn === 'o' && boards[i] === null" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
@@ -189,7 +196,10 @@
       </div>
     </div>
     <!-- 4. banner match -->
-    <div x-show="gameOver" class="w-screen h-screen bg-black/50 absolute -top-[24px]">
+    <div x-cloak x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-90"
+      x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-300"
+      x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-90" x-show="gameOver"
+      class="w-screen h-screen bg-black/50 absolute -top-[24px]">
       <div
         class="w-screen  h-[228px] md:h-[226px] flex flex-col text-center items-center justify-center gap-[24px] bg-[#1F3641] absolute top-50">
         <!-- WIN/LOSE -->
@@ -246,9 +256,6 @@
   </section>
   <!-- Game board end -->
 
-
-
-
   <script>
     function app() {
       return {
@@ -273,7 +280,7 @@
           [0, 4, 8],
           [2, 4, 6],
         ],
-        winningTiles: [],
+        patternWinner: [],
         gameOver: false,
         winner: "",
 
@@ -320,10 +327,17 @@
           this.cpuPlay()
         },
 
+
         checkWinner(player) {
-          return this.winningPatterns.some(pattern => {
-            return pattern.every(i => this.boards[i] === player)
+          let tileWinner = this.winningPatterns.some(pattern => {
+            everyPattern = pattern.every(i => this.boards[i] === player)
+            if (everyPattern) {
+              this.patternWinner = pattern
+            }
+            return everyPattern
           })
+
+          return tileWinner
         },
 
         triggerTile(i) {
