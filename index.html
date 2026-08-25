@@ -120,33 +120,32 @@
           </svg>
         </button></div>
     </div>
-    <!-- 2. grid 3x3 play -->
 
+    <!-- 2. grid 3x3 play -->
     <div class="flex flex-col gap-[20px]">
       <div class="grid grid-cols-3 gap-[20px]">
         <!-- TILES -->
-        <!-- todo -->
-        <!-- looping tiles sampai 9 -->
-         <template x-for="(_, i) in boards">
-           <div @click="markTile(i)"
-             class="bg-[#1F3641] min-w-[96px] md:w-[140px] md:h-[140px] shadow-[inset_0_-8px_0_0_#10212A] rounded-[10px] min-h-[96px] cursor-pointer items-center flex justify-center">
-             <!-- X/O -->
-             <div class="w-[40px] h-[40px]">
-               <svg x-show="boards[i] === 'x'" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-                 <path
-                   d="M15.002 1.147 32 18.145 48.998 1.147a3 3 0 0 1 4.243 0l9.612 9.612a3 3 0 0 1 0 4.243L45.855 32l16.998 16.998a3 3 0 0 1 0 4.243l-9.612 9.612a3 3 0 0 1-4.243 0L32 45.855 15.002 62.853a3 3 0 0 1-4.243 0L1.147 53.24a3 3 0 0 1 0-4.243L18.145 32 1.147 15.002a3 3 0 0 1 0-4.243l9.612-9.612a3 3 0 0 1 4.243 0Z"
-                   fill="#31C3BD" fill-rule="evenodd" />
-               </svg>
-   
-               <svg x-show="boards[i] === 'o'" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-                 <path
-                   d="M32 0c17.673 0 32 14.327 32 32 0 17.673-14.327 32-32 32C14.327 64 0 49.673 0 32 0 14.327 14.327 0 32 0Zm0 18.963c-7.2 0-13.037 5.837-13.037 13.037 0 7.2 5.837 13.037 13.037 13.037 7.2 0 13.037-5.837 13.037-13.037 0-7.2-5.837-13.037-13.037-13.037Z"
-                   fill="#F2B137" />
-               </svg>
-             </div>
-           </div>
-         </template>
+        <template x-for="(_, i) in boards">
+          <div @click="markTile(i)"
+            class="bg-[#1F3641] min-w-[96px] md:w-[140px] md:h-[140px] shadow-[inset_0_-8px_0_0_#10212A] rounded-[10px] min-h-[96px] cursor-pointer items-center flex justify-center">
+            <!-- X/O -->
+            <div class="w-[40px] h-[40px]">
+              <svg x-show="boards[i] === 'x'" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M15.002 1.147 32 18.145 48.998 1.147a3 3 0 0 1 4.243 0l9.612 9.612a3 3 0 0 1 0 4.243L45.855 32l16.998 16.998a3 3 0 0 1 0 4.243l-9.612 9.612a3 3 0 0 1-4.243 0L32 45.855 15.002 62.853a3 3 0 0 1-4.243 0L1.147 53.24a3 3 0 0 1 0-4.243L18.145 32 1.147 15.002a3 3 0 0 1 0-4.243l9.612-9.612a3 3 0 0 1 4.243 0Z"
+                  fill="#31C3BD" fill-rule="evenodd" />
+              </svg>
+
+              <svg x-show="boards[i] === 'o'" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M32 0c17.673 0 32 14.327 32 32 0 17.673-14.327 32-32 32C14.327 64 0 49.673 0 32 0 14.327 14.327 0 32 0Zm0 18.963c-7.2 0-13.037 5.837-13.037 13.037 0 7.2 5.837 13.037 13.037 13.037 7.2 0 13.037-5.837 13.037-13.037 0-7.2-5.837-13.037-13.037-13.037Z"
+                  fill="#F2B137" />
+              </svg>
+            </div>
+          </div>
+        </template>
       </div>
+
       <!-- 3. grid 3x1 statistic -->
       <div class="grid grid-cols-3 gap-[20px] text-center">
         <div
@@ -204,22 +203,34 @@
 
         turn: "x",
         boards: [null, null, null, null, null, null, null, null, null],
+        winningPatterns: [
+          [0, 1, 2],
+          [3, 4, 5],
+          [6, 7, 8],
+
+          [0, 3, 6],
+          [1, 4, 7],
+          [2, 5, 8],
+
+          [0, 4, 8],
+          [2, 4, 6],
+        ],
+        winningTiles: [],
+        gameOver: false,
 
         toggleMenu() {
-          this.convXO()
+          this.turn = this.side
           this.menuToggle = !this.menuToggle
         },
 
-        convXO() {
-          if (this.side == 'x') {
-            this.turn = true
-          } else if (this.side == 'o') {
-            this.turn = false
-          }
+        checkWinner(player) {
+          return this.winningPatterns.some(pattern => {
+            return pattern.every(i => this.boards[i] === player)
+          })
         },
 
-        markTile(i){
-          if (this.boards[i] !== null){
+        markTile(i) {
+          if (this.boards[i] !== null) {
             console.log("TERISI")
             return
           }
@@ -227,10 +238,20 @@
           // field
           this.boards[i] = this.turn
 
-          // check winner 
+          // check winner
+          if (this.checkWinner(this.turn)) {
+            console.log(`${this.turn} MENANG!`)
+            return
+          }
+
+          // check draw
+          if (this.boards.every(tile => tile !== null)) {
+            console.log("DRAW!")
+            return
+          }
 
           // change turn
-          if (this.turn === "x"){
+          if (this.turn === "x") {
             this.turn = "o"
           } else {
             this.turn = "x"
