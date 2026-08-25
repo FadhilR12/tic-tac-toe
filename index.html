@@ -13,8 +13,8 @@
 <body class="bg-[#1A2A33] items-center flex flex-col font-outfit" x-data="app()">
 
   <!-- New game menu start -->
-  <section class="flex flex-col min-h-screen w-[327px] md:w-[460px] items-center justify-center gap-[32px]"
-    :class="menuToggle ? '' : 'hiddaen'">
+  <section class="flex flex-col w-[327px] md:w-[460px] items-center justify-center min-h-screen gap-[32px]"
+    :class="menuToggle ? '' : 'hidden'">
     <div><img src="./assets/logo.svg" alt=""></div>
 
     <!-- Player pick -->
@@ -71,7 +71,8 @@
       </div>
 
       <div
-        class="flex flex-col text-center cursor-pointer shadow-[inset_0_-8px_0_0_#118C87] bg-[#31C3BD] py-[16px] h-[56px] rounded-[16px]">
+        class="flex flex-col text-center cursor-pointer shadow-[inset_0_-8px_0_0_#118C87] bg-[#31C3BD] py-[16px] h-[56px] rounded-[16px]"
+        @click="gameMode = 'human', toggleMenu()">
         <button class="cursor-pointer">
           NEW GAME (VS PLAYER)
         </button>
@@ -84,111 +85,149 @@
 
   <!-- Game board start -->
 
-  <section class="flex flex-col mt-[24px] min-h-screen w-[327px] md:w-[460px] gap-[64px] md:gap-[20px]"
-    :class="menuToggle ? 'hiddean' : 'flex'">
-    <!-- 1. Header -->
-    <div class=" flex flex-row text-white justify-center items-center gap-[72px] md:gap-[108px] ">
-      <div class="flex flex-row items-center gap-[47px] md:gap-[90.8px]">
-        <!-- LOGO -->
-        <div><img src="./assets/logo.svg" alt=""></div>
+  <section class="relative flex flex-col items-center mt-[24px]" :class="menuToggle ? 'hidden' : 'flex'">
+    <div class="w-[327px] flex flex-col md:w-[460px] gap-[64px] md:gap-[20px]">
+      <!-- 1. Header -->
+      <div class=" flex flex-row text-white justify-center items-center gap-[72px] md:gap-[108px] ">
+        <div class="flex flex-row items-center gap-[47px] md:gap-[90.8px]">
+          <!-- LOGO -->
+          <div><img src="./assets/logo.svg" alt=""></div>
 
-        <!-- TURN -->
-        <div
-          class="flex flex-row bg-[#1F3641] px-[15.5px] rounded-[6px] py-[11px] text-[#A8BFC9] items-center gap-[8px]">
-          <span>
-            <svg width="16" height="16" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M15.002 1.147 32 18.145 48.998 1.147a3 3 0 0 1 4.243 0l9.612 9.612a3 3 0 0 1 0 4.243L45.855 32l16.998 16.998a3 3 0 0 1 0 4.243l-9.612 9.612a3 3 0 0 1-4.243 0L32 45.855 15.002 62.853a3 3 0 0 1-4.243 0L1.147 53.24a3 3 0 0 1 0-4.243L18.145 32 1.147 15.002a3 3 0 0 1 0-4.243l9.612-9.612a3 3 0 0 1 4.243 0Z"
-                fill="#A8BFC9" fill-rule="evenodd" />
-            </svg>
-            <svg class="hidden" width="16" height="16" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M32 0c17.673 0 32 14.327 32 32 0 17.673-14.327 32-32 32C14.327 64 0 49.673 0 32 0 14.327 14.327 0 32 0Zm0 18.963c-7.2 0-13.037 5.837-13.037 13.037 0 7.2 5.837 13.037 13.037 13.037 7.2 0 13.037-5.837 13.037-13.037 0-7.2-5.837-13.037-13.037-13.037Z"
-                fill="#A8BFC9" />
-            </svg>
-          </span>
-          <span>TURN</span>
+          <!-- TURN -->
+          <div
+            class="flex flex-row bg-[#1F3641] px-[15.5px] rounded-[6px] py-[11px] text-[#A8BFC9] items-center gap-[8px]">
+            <span>
+              <svg x-show="turn === 'x'" width="16" height="16" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M15.002 1.147 32 18.145 48.998 1.147a3 3 0 0 1 4.243 0l9.612 9.612a3 3 0 0 1 0 4.243L45.855 32l16.998 16.998a3 3 0 0 1 0 4.243l-9.612 9.612a3 3 0 0 1-4.243 0L32 45.855 15.002 62.853a3 3 0 0 1-4.243 0L1.147 53.24a3 3 0 0 1 0-4.243L18.145 32 1.147 15.002a3 3 0 0 1 0-4.243l9.612-9.612a3 3 0 0 1 4.243 0Z"
+                  fill="#A8BFC9" fill-rule="evenodd" />
+              </svg>
+              <svg x-show="turn === 'o'" width="16" height="16" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M32 0c17.673 0 32 14.327 32 32 0 17.673-14.327 32-32 32C14.327 64 0 49.673 0 32 0 14.327 14.327 0 32 0Zm0 18.963c-7.2 0-13.037 5.837-13.037 13.037 0 7.2 5.837 13.037 13.037 13.037 7.2 0 13.037-5.837 13.037-13.037 0-7.2-5.837-13.037-13.037-13.037Z"
+                  fill="#A8BFC9" />
+              </svg>
+            </span>
+            <span>TURN</span>
+          </div>
         </div>
+
+        <!-- RESET -->
+        <div class="w-[40px] h-[40px] rounded-[6px] p-[12px] bg-[#A8BFC9] items-center justify-center flex"><button>
+            <svg width="15.4" height="15.4" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M19.524 0h-1.88a.476.476 0 0 0-.476.499l.159 3.284A9.81 9.81 0 0 0 9.835.317C4.415.317-.004 4.743 0 10.167.004 15.597 4.406 20 9.835 20a9.796 9.796 0 0 0 6.59-2.536.476.476 0 0 0 .019-.692l-1.348-1.349a.476.476 0 0 0-.65-.022 6.976 6.976 0 0 1-9.85-.63 6.987 6.987 0 0 1 .63-9.857 6.976 6.976 0 0 1 10.403 1.348l-4.027-.193a.476.476 0 0 0-.498.476v1.881c0 .263.213.476.476.476h7.944A.476.476 0 0 0 20 8.426V.476A.476.476 0 0 0 19.524 0Z"
+                fill="#1F3641" />
+            </svg>
+          </button></div>
       </div>
 
-      <!-- RESET -->
-      <div class="w-[40px] h-[40px] rounded-[6px] p-[12px] bg-[#A8BFC9] items-center justify-center flex"><button>
-          <svg width="15.4" height="15.4" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-            <path
-              d="M19.524 0h-1.88a.476.476 0 0 0-.476.499l.159 3.284A9.81 9.81 0 0 0 9.835.317C4.415.317-.004 4.743 0 10.167.004 15.597 4.406 20 9.835 20a9.796 9.796 0 0 0 6.59-2.536.476.476 0 0 0 .019-.692l-1.348-1.349a.476.476 0 0 0-.65-.022 6.976 6.976 0 0 1-9.85-.63 6.987 6.987 0 0 1 .63-9.857 6.976 6.976 0 0 1 10.403 1.348l-4.027-.193a.476.476 0 0 0-.498.476v1.881c0 .263.213.476.476.476h7.944A.476.476 0 0 0 20 8.426V.476A.476.476 0 0 0 19.524 0Z"
-              fill="#1F3641" />
-          </svg>
-        </button></div>
-    </div>
+      <!-- 2. grid 3x3 play -->
+      <div class="flex flex-col gap-[20px]">
+        <div class="grid grid-cols-3 gap-[20px]">
+          <!-- TILES -->
+          <template x-for="(_, i) in boards">
+            <div @click="triggerTile(i)"
+              class="bg-[#1F3641] min-w-[96px] md:w-[140px] md:h-[140px] shadow-[inset_0_-8px_0_0_#10212A] rounded-[10px] min-h-[96px] cursor-pointer items-center flex justify-center">
+              <!-- X/O -->
+              <div class="w-[40px] h-[40px]">
+                <svg x-show="boards[i] === 'x'" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M15.002 1.147 32 18.145 48.998 1.147a3 3 0 0 1 4.243 0l9.612 9.612a3 3 0 0 1 0 4.243L45.855 32l16.998 16.998a3 3 0 0 1 0 4.243l-9.612 9.612a3 3 0 0 1-4.243 0L32 45.855 15.002 62.853a3 3 0 0 1-4.243 0L1.147 53.24a3 3 0 0 1 0-4.243L18.145 32 1.147 15.002a3 3 0 0 1 0-4.243l9.612-9.612a3 3 0 0 1 4.243 0Z"
+                    fill="#31C3BD" fill-rule="evenodd" />
+                </svg>
 
-    <!-- 2. grid 3x3 play -->
-    <div class="flex flex-col gap-[20px]">
-      <div class="grid grid-cols-3 gap-[20px]">
-        <!-- TILES -->
-        <template x-for="(_, i) in boards">
-          <div @click="markTile(i)"
-            class="bg-[#1F3641] min-w-[96px] md:w-[140px] md:h-[140px] shadow-[inset_0_-8px_0_0_#10212A] rounded-[10px] min-h-[96px] cursor-pointer items-center flex justify-center">
-            <!-- X/O -->
-            <div class="w-[40px] h-[40px]">
-              <svg x-show="boards[i] === 'x'" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                <svg x-show="boards[i] === 'o'" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M32 0c17.673 0 32 14.327 32 32 0 17.673-14.327 32-32 32C14.327 64 0 49.673 0 32 0 14.327 14.327 0 32 0Zm0 18.963c-7.2 0-13.037 5.837-13.037 13.037 0 7.2 5.837 13.037 13.037 13.037 7.2 0 13.037-5.837 13.037-13.037 0-7.2-5.837-13.037-13.037-13.037Z"
+                    fill="#F2B137" />
+                </svg>
+              </div>
+            </div>
+          </template>
+        </div>
+
+        <!-- 3. grid 3x1 statistic -->
+        <div class="grid grid-cols-3 gap-[20px] text-center text-[12px] font-medium leading-[1.25] tracking-[0.75px]">
+          <div
+            class="bg-[#31C3BD] w-[96px] md:w-[140px] md:h-[72px] flex flex-col items-center justify-center rounded-[10px] h-[64px]">
+            <p x-show="gameMode === 'cpu' && side ==='x'">X (YOU)</p>
+            <p x-show="gameMode === 'cpu' && cpuSide ==='x'">X (CPU)</p>
+            <p x-show="gameMode === 'human' && side ==='x'">X (P1)</p>
+            <p x-show="gameMode === 'human' && p2Side === 'x'">X (P2)</p>
+            <p class="text-[20px] font-bold leading-[1.25] tracking-[1.25px]" x-text="scoreX">0</p>
+          </div>
+          <div
+            class="bg-[#A8BFC9] w-[96px] md:w-[140px] md:h-[72px] flex flex-col items-center justify-center rounded-[10px] h-[64px]">
+            <p>TIES</p>
+            <p class="text-[20px] font-bold leading-[1.25] tracking-[1.25px]" x-text="tie">0</p>
+          </div>
+          <div
+            class="bg-[#F2B137] w-[96px] md:w-[140px] md:h-[72px] flex flex-col items-center justify-center rounded-[10px] h-[64px]">
+            <p x-show="gameMode === 'cpu' && side ==='o'">O (YOU)</p>
+            <p x-show="gameMode === 'cpu' && cpuSide ==='o'">O (CPU)</p>
+            <p x-show="gameMode === 'human' && side ==='o'">O (P1)</p>
+            <p x-show="gameMode === 'human' && p2Side === 'o'">O (P2)</p>
+            <p class="text-[20px] font-bold leading-[1.25] tracking-[1.25px]" x-text="scoreO">0</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 4. banner match -->
+    <div x-show="gameOver" class="w-screen h-screen bg-black/50 absolute -top-[24px]">
+      <div
+        class="w-screen  h-[228px] md:h-[226px] flex flex-col text-center items-center justify-center gap-[24px] bg-[#1F3641] absolute top-50">
+        <!-- WIN/LOSE -->
+        <div class="flex flex-col gap-[16px]" x-show="winner !== ''">
+          <p x-show="winner === side && gameMode === 'cpu'"
+            class="md:text-[16px] font-bold md:leading-[1.25] md:tracking-[1px] text-[#A8BFC9] text-[14px] leading-[1.3] tracking-[0.9px]">
+            YOU WON!</p>
+          <p x-show="winner !== side && gameMode === 'cpu'"
+            class="md:text-[16px] font-bold md:leading-[1.25] md:tracking-[1px] text-[#A8BFC9] text-[14px] leading-[1.3] tracking-[0.9px]">
+            OH NO, YOU LOST...</p>
+          <p x-show="winner === side && gameMode === 'human'"
+            class="md:text-[16px] font-bold md:leading-[1.25] md:tracking-[1px] text-[#A8BFC9] text-[14px] leading-[1.3] tracking-[0.9px]">
+            PLAYER 1 WINS!</p>
+          <p x-show="winner !== side && gameMode === 'human'"
+            class="md:text-[16px] font-bold md:leading-[1.25] md:tracking-[1px] text-[#A8BFC9] text-[14px] leading-[1.3] tracking-[0.9px]">
+            PLAYER 2 WINS!</p>
+          <div class="flex flex-row items-center justify-center gap-[24px]">
+            <span>
+              <svg x-show="winner === 'x'" width="26.6" height="26.6" viewBox="0 0 64 64"
+                xmlns="http://www.w3.org/2000/svg">
                 <path
                   d="M15.002 1.147 32 18.145 48.998 1.147a3 3 0 0 1 4.243 0l9.612 9.612a3 3 0 0 1 0 4.243L45.855 32l16.998 16.998a3 3 0 0 1 0 4.243l-9.612 9.612a3 3 0 0 1-4.243 0L32 45.855 15.002 62.853a3 3 0 0 1-4.243 0L1.147 53.24a3 3 0 0 1 0-4.243L18.145 32 1.147 15.002a3 3 0 0 1 0-4.243l9.612-9.612a3 3 0 0 1 4.243 0Z"
                   fill="#31C3BD" fill-rule="evenodd" />
               </svg>
 
-              <svg x-show="boards[i] === 'o'" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+              <svg x-show="winner === 'o'" width="26.6" height="26.6" viewBox="0 0 64 64"
+                xmlns="http://www.w3.org/2000/svg">
                 <path
                   d="M32 0c17.673 0 32 14.327 32 32 0 17.673-14.327 32-32 32C14.327 64 0 49.673 0 32 0 14.327 14.327 0 32 0Zm0 18.963c-7.2 0-13.037 5.837-13.037 13.037 0 7.2 5.837 13.037 13.037 13.037 7.2 0 13.037-5.837 13.037-13.037 0-7.2-5.837-13.037-13.037-13.037Z"
                   fill="#F2B137" />
               </svg>
-            </div>
+            </span>
+            <span class=" font-bold text-[24px] leading-[1.25] tracking-[1.5px]"
+              :class="winner === 'x' ? 'text-[#31C3BD]' : 'text-[#F2B137]' ">TAKES THE ROUND</span>
           </div>
-        </template>
-      </div>
-
-      <!-- 3. grid 3x1 statistic -->
-      <div class="grid grid-cols-3 gap-[20px] text-center">
-        <div
-          class="bg-[#31C3BD] w-[96px] md:w-[140px] md:h-[72px] flex flex-col items-center justify-center rounded-[10px] h-[64px]">
-          <p>X (YOU)</p>
-          <p>0</p>
         </div>
-        <div
-          class="bg-[#A8BFC9] w-[96px] md:w-[140px] md:h-[72px] flex flex-col items-center justify-center rounded-[10px] h-[64px]">
-          <p>TIES</p>
-          <p>0</p>
+        <!-- DRAW -->
+        <div class="flex flex-col mb-[6px]" x-show="winner === ''">
+          <p
+            class="md:text-[40px] font-bold md:leading-[1.25] md:tracking-[2.5px] text-[#A8BFC9] text-[24px] leading-[1.25] tracking-[1.5px]">
+            ROUND TIED</p>
         </div>
-        <div
-          class="bg-[#F2B137] w-[96px] md:w-[140px] md:h-[72px] flex flex-col items-center justify-center rounded-[10px] h-[64px]">
-          <p>O (CPU)</p>
-          <p>0</p>
+        <div class="flex flex-row gap-[16px] text-[16px] font-bold leading-[1.25] tracking-[1px]">
+          <button @click="gameMode='',toggleMenu(), restartGame(), resetScore() "
+            class="p-[16px] rounded-[10px] items-center bg-[#A8BFC9] shadow-[inset_0_-4px_0_0_#6B8997]">QUIT</button>
+          <button class="p-[16px] rounded-[10px] items-center bg-[#F2B137] shadow-[inset_0_-4px_0_0_#CC8B13]"
+            @click="restartGame()">NEXT
+            ROUND</button>
         </div>
       </div>
     </div>
-    <!-- 4. banner match -->
+
   </section>
-
-
-
-  <!-- x/o icon --> turn
-
-  X (You) <!-- Your score -->
-  Ties <!-- Ties score -->
-  X (CPU) <!-- CPU score -->
-
-  Oh no, you lost
-  You won!
-  Player <!-- 1/2 --> wins!
-
-  <!-- x/o icon --> takes the round
-  Round tied
-  Restart game?
-
-  Quit
-  Next round
-  No, cancel
-  Yes, restart
-
   <!-- Game board end -->
 
 
@@ -198,6 +237,9 @@
     function app() {
       return {
         side: "x",
+        get p2Side() {
+          return this.counterSide()
+        },
         gameMode: "cpu",
         menuToggle: true,
 
@@ -217,10 +259,49 @@
         ],
         winningTiles: [],
         gameOver: false,
+        winner: "",
+
+        scoreX: 0,
+        scoreO: 0,
+        tie: 0,
+
+        get cpuSide() {
+          return this.counterSide()
+        },
+
+        counterSide() {
+          return this.side === "x" ? "o" : "x"
+        },
+
+        resetScore() {
+          this.scoreX = 0
+          this.scoreO = 0
+          this.tie = 0
+        },
+
+
+
+        score() {
+          if (this.winner === "x") {
+            this.scoreX++
+            return
+          } else if (this.winner === "o") {
+            this.scoreO++
+            return
+          }
+        },
+
+        cpu() {
+          let index = Math.floor(Math.random() * 9)
+          while (this.boards[index] !== null) {
+            index = Math.floor(Math.random() * 9)
+          }
+          this.markTile(index)
+        },
 
         toggleMenu() {
-          this.turn = this.side
           this.menuToggle = !this.menuToggle
+          this.cpuPlay()
         },
 
         checkWinner(player) {
@@ -229,9 +310,15 @@
           })
         },
 
+        triggerTile(i) {
+          if (this.turn === this.cpuSide && this.gameMode === "cpu") {
+            return
+          }
+          this.markTile(i)
+        },
+
         markTile(i) {
-          if (this.boards[i] !== null) {
-            console.log("TERISI")
+          if (this.boards[i] !== null || this.gameOver === true) {
             return
           }
 
@@ -240,13 +327,16 @@
 
           // check winner
           if (this.checkWinner(this.turn)) {
-            console.log(`${this.turn} MENANG!`)
+            this.gameOver = true
+            this.winner = this.turn
+            this.score()
             return
           }
 
           // check draw
           if (this.boards.every(tile => tile !== null)) {
-            console.log("DRAW!")
+            this.gameOver = true
+            this.tie++
             return
           }
 
@@ -256,7 +346,25 @@
           } else {
             this.turn = "x"
           }
+
+          this.cpuPlay()
         },
+
+        cpuPlay() {
+          if (this.turn === this.cpuSide && this.gameMode === "cpu") {
+            setTimeout(() => {
+              this.cpu()
+            }, 1000)
+          }
+        },
+
+        restartGame() {
+          this.boards = [null, null, null, null, null, null, null, null, null]
+          this.turn = "x"
+          this.gameOver = false
+          this.winner = ""
+          this.cpuPlay()
+        }
 
 
       }
