@@ -19,18 +19,27 @@
 
     <!-- Player pick -->
     <div
-      class="p-[24px] bg-[#1F3641] flex flex-col h-[205px] w-full items-center gap-[16px] rounded-[16px] justify-center text-[#A8BFC9]">
+      class="p-[24px] min-w-[360px] bg-[#1F3641] flex flex-col h-[205px] w-full items-center gap-[16px] rounded-[16px] justify-center text-[#A8BFC9]">
       <div class="flex flex-col gap-[24px] items-center w-full justify-center">
         <p class="font-bold text-[16px] leading-[1.25] tracking-[1px]">PICK PLAYER 1'S MARK</p>
         <!-- X/O pick -->
         <div
-          class="grid grid-cols-2 min-h-[72px] w-full items-center px-[7.5px] py-[9px] justify-center bg-[#1A2A33] rounded-[10px]">
+          class="relative grid grid-cols-2 min-h-[72px] w-full items-center px-[7.5px] py-[9px] justify-center bg-[#1A2A33] rounded-[10px]">
+
+          <!-- Sliding background -->
+          <div
+            class="absolute top-[9px] left-[7.5px] w-[calc(50%-7.5px)] h-[54px] bg-[#A8BFC9] rounded-[10px] transition-transform duration-300 ease-out"
+            :class="side === 'o' ? 'translate-x-full' : ''">
+          </div>
+
           <!-- X -->
-          <div>
+          <div class="relative z-10">
             <div class="flex flex-col items-center w-full h-[54px] rounded-[10px] justify-center cursor-pointer"
-              @click="side = 'x'" x-bind:class="side === 'x' ? 'bg-[#A8BFC9]' : '' ">
+              @click="side = 'x'">
+
               <svg width="32" height="32" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"
-                :fill="side ==='x' ? '' : '#A8BFC9' ">
+                :fill="side === 'x' ? '#1A2A33' : '#A8BFC9'" class="transition-colors duration-300">
+
                 <path
                   d="M15.002 1.147 32 18.145 48.998 1.147a3 3 0 0 1 4.243 0l9.612 9.612a3 3 0 0 1 0 4.243L45.855 32l16.998 16.998a3 3 0 0 1 0 4.243l-9.612 9.612a3 3 0 0 1-4.243 0L32 45.855 15.002 62.853a3 3 0 0 1-4.243 0L1.147 53.24a3 3 0 0 1 0-4.243L18.145 32 1.147 15.002a3 3 0 0 1 0-4.243l9.612-9.612a3 3 0 0 1 4.243 0Z"
                   fill-rule="evenodd" />
@@ -39,18 +48,18 @@
           </div>
 
           <!-- O -->
-          <div>
+          <div class="relative z-10">
             <div class="cursor-pointer w-full h-[54px] rounded-[10px] justify-center flex flex-col items-center"
-              @click="side = 'o'" x-bind:class="side === 'o' ? 'bg-[#A8BFC9]' : '' ">
+              @click="side = 'o'">
+
               <svg width="32" height="32" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"
-                :fill="side ==='o' ? '' : '#A8BFC9' ">
+                :fill="side === 'o' ? '#1A2A33' : '#A8BFC9'" class="transition-colors duration-300">
+
                 <path
                   d="M32 0c17.673 0 32 14.327 32 32 0 17.673-14.327 32-32 32C14.327 64 0 49.673 0 32 0 14.327 14.327 0 32 0Zm0 18.963c-7.2 0-13.037 5.837-13.037 13.037 0 7.2 5.837 13.037 13.037 13.037 7.2 0 13.037-5.837 13.037-13.037 0-7.2-5.837-13.037-13.037-13.037Z" />
               </svg>
             </div>
           </div>
-
-
         </div>
         <!-- X/O end -->
       </div>
@@ -85,7 +94,9 @@
 
   <!-- Game board start -->
 
-  <section class="relative flex flex-col items-center mt-[24px]" :class="menuToggle ? 'hidden' : 'flex'">
+  <section
+    class="relative flex flex-col items-center pt-[24px] justify-center md:mt-0 md:min-h-screen md:justify-center  lg:min-h-0 lg:justify-start lg:mt-[133px]"
+    :class="menuToggle ? 'hidden' : 'flex'">
     <div class="w-[327px] flex flex-col md:w-[460px] gap-[64px] md:gap-[20px]">
       <!-- 1. Header -->
       <div class=" flex flex-row text-white justify-center items-center gap-[72px] md:gap-[108px] ">
@@ -113,8 +124,11 @@
         </div>
 
         <!-- RESET -->
-        <div @click="isRestart = !isRestart" class="w-[40px] h-[40px] rounded-[6px] p-[12px] bg-[#A8BFC9] items-center justify-center flex"><button>
-            <svg width="15.4" height="15.4" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+        <div @click="isRestart = !isRestart"
+          class="w-[40px] h-[40px] rounded-[6px] cursor-pointer p-[12px] bg-[#A8BFC9] items-center justify-center flex duration-300 hover:bg-[#DBE8ED]">
+          <button>
+            <svg width="15.4" height="15.4" viewBox="0 0 20 20" class="cursor-pointer"
+              xmlns="http://www.w3.org/2000/svg">
               <path
                 d="M19.524 0h-1.88a.476.476 0 0 0-.476.499l.159 3.284A9.81 9.81 0 0 0 9.835.317C4.415.317-.004 4.743 0 10.167.004 15.597 4.406 20 9.835 20a9.796 9.796 0 0 0 6.59-2.536.476.476 0 0 0 .019-.692l-1.348-1.349a.476.476 0 0 0-.65-.022 6.976 6.976 0 0 1-9.85-.63 6.987 6.987 0 0 1 .63-9.857 6.976 6.976 0 0 1 10.403 1.348l-4.027-.193a.476.476 0 0 0-.498.476v1.881c0 .263.213.476.476.476h7.944A.476.476 0 0 0 20 8.426V.476A.476.476 0 0 0 19.524 0Z"
                 fill="#1F3641" />
@@ -130,15 +144,15 @@
             <div @click="triggerTile(i)"
               class="bg-[#1F3641] min-w-[96px] md:w-[140px] md:h-[140px] shadow-[inset_0_-8px_0_0_#10212A] rounded-[10px] min-h-[96px] cursor-pointer items-center flex justify-center"
               x-bind:class="{
-                'bg-[#F2B137]': winner === 'o' && patternWinner.includes(i), 
-                'bg-[#31C3BD]': winner === 'x' && patternWinner.includes(i), 
+                'bg-[#F2B137]': roundWinner === 'o' && patternWinner.includes(i), 
+                'bg-[#31C3BD]': roundWinner === 'x' && patternWinner.includes(i), 
               }">
               <!-- X/O -->
               <div class="w-[40px] h-[40px] md:w-[63.5px] md:h-[63.5px] duration-200" x-bind:class="{
                 'opacity-0 hover:opacity-100' : boards[i] === null
               }">
                 <svg x-show="boards[i] === 'x'" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" x-bind:class="{
-                  'fill-[#31C3BD]' : winner === '' || !patternWinner.includes(i)
+                  'fill-[#31C3BD]' : roundWinner === '' || !patternWinner.includes(i)
                 }">
                   <path
                     d="M15.002 1.147 32 18.145 48.998 1.147a3 3 0 0 1 4.243 0l9.612 9.612a3 3 0 0 1 0 4.243L45.855 32l16.998 16.998a3 3 0 0 1 0 4.243l-9.612 9.612a3 3 0 0 1-4.243 0L32 45.855 15.002 62.853a3 3 0 0 1-4.243 0L1.147 53.24a3 3 0 0 1 0-4.243L18.145 32 1.147 15.002a3 3 0 0 1 0-4.243l9.612-9.612a3 3 0 0 1 4.243 0Z"
@@ -153,7 +167,7 @@
                 </svg>
 
                 <svg x-show="boards[i] === 'o'" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" x-bind:class="{
-                  'fill-[#F2B137]' : winner === '' || !patternWinner.includes(i)
+                  'fill-[#F2B137]' : roundWinner === '' || !patternWinner.includes(i)
                 }">
                   <path
                     d="M32 0c17.673 0 32 14.327 32 32 0 17.673-14.327 32-32 32C14.327 64 0 49.673 0 32 0 14.327 14.327 0 32 0Zm0 18.963c-7.2 0-13.037 5.837-13.037 13.037 0 7.2 5.837 13.037 13.037 13.037 7.2 0 13.037-5.837 13.037-13.037 0-7.2-5.837-13.037-13.037-13.037Z" />
@@ -199,33 +213,36 @@
     <div x-cloak x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-90"
       x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-300"
       x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-90"
-      x-show="gameOver || isRestart" class="w-screen h-screen bg-black/50 absolute -top-[24px]">
-      <div x-show="gameOver && !isRestart"
-        class="w-screen  h-[228px] md:h-[226px] flex flex-col text-center items-center justify-center gap-[24px] bg-[#1F3641] absolute top-50">
+      x-show="gameOver || isRestart" class="fixed inset-0 z-50 overflow-hidden bg-black/50">
+      <div x-show="gameOver && !isRestart" x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="translate-x-full opacity-0" x-transition:enter-end="translate-x-0 opacity-100"
+        x-transition:leave="transition ease-in duration-200" x-transition:leave-start="translate-x-0 opacity-100"
+        x-transition:leave-end="translate-x-full opacity-0"
+        class="w-screen  h-[228px] md:h-[226px] flex flex-col text-center items-center justify-center gap-[24px] bg-[#1F3641] absolute top-50 lg:top-80 md:top-110">
         <!-- WIN/LOSE -->
-        <div class="flex flex-col gap-[16px]" x-show="winner !== ''">
-          <p x-show="winner === side && gameMode === 'cpu'"
+        <div class="flex flex-col gap-[16px]" x-show="roundWinner !== ''">
+          <p x-show="roundWinner === side && gameMode === 'cpu'"
             class="md:text-[16px] font-bold md:leading-[1.25] md:tracking-[1px] text-[#A8BFC9] text-[14px] leading-[1.3] tracking-[0.9px]">
             YOU WON!</p>
-          <p x-show="winner !== side && gameMode === 'cpu'"
+          <p x-show="roundWinner !== side && gameMode === 'cpu'"
             class="md:text-[16px] font-bold md:leading-[1.25] md:tracking-[1px] text-[#A8BFC9] text-[14px] leading-[1.3] tracking-[0.9px]">
             OH NO, YOU LOST...</p>
-          <p x-show="winner === side && gameMode === 'human'"
+          <p x-show="roundWinner === side && gameMode === 'human'"
             class="md:text-[16px] font-bold md:leading-[1.25] md:tracking-[1px] text-[#A8BFC9] text-[14px] leading-[1.3] tracking-[0.9px]">
             PLAYER 1 WINS!</p>
-          <p x-show="winner !== side && gameMode === 'human'"
+          <p x-show="roundWinner !== side && gameMode === 'human'"
             class="md:text-[16px] font-bold md:leading-[1.25] md:tracking-[1px] text-[#A8BFC9] text-[14px] leading-[1.3] tracking-[0.9px]">
             PLAYER 2 WINS!</p>
           <div class="flex flex-row items-center justify-center gap-[24px]">
             <span>
-              <svg x-show="winner === 'x'" width="26.6" height="26.6" viewBox="0 0 64 64"
+              <svg x-show="roundWinner === 'x'" width="26.6" height="26.6" viewBox="0 0 64 64"
                 xmlns="http://www.w3.org/2000/svg">
                 <path
                   d="M15.002 1.147 32 18.145 48.998 1.147a3 3 0 0 1 4.243 0l9.612 9.612a3 3 0 0 1 0 4.243L45.855 32l16.998 16.998a3 3 0 0 1 0 4.243l-9.612 9.612a3 3 0 0 1-4.243 0L32 45.855 15.002 62.853a3 3 0 0 1-4.243 0L1.147 53.24a3 3 0 0 1 0-4.243L18.145 32 1.147 15.002a3 3 0 0 1 0-4.243l9.612-9.612a3 3 0 0 1 4.243 0Z"
                   fill="#31C3BD" fill-rule="evenodd" />
               </svg>
 
-              <svg x-show="winner === 'o'" width="26.6" height="26.6" viewBox="0 0 64 64"
+              <svg x-show="roundWinner === 'o'" width="26.6" height="26.6" viewBox="0 0 64 64"
                 xmlns="http://www.w3.org/2000/svg">
                 <path
                   d="M32 0c17.673 0 32 14.327 32 32 0 17.673-14.327 32-32 32C14.327 64 0 49.673 0 32 0 14.327 14.327 0 32 0Zm0 18.963c-7.2 0-13.037 5.837-13.037 13.037 0 7.2 5.837 13.037 13.037 13.037 7.2 0 13.037-5.837 13.037-13.037 0-7.2-5.837-13.037-13.037-13.037Z"
@@ -233,39 +250,44 @@
               </svg>
             </span>
             <span class=" font-bold text-[24px] leading-[1.25] tracking-[1.5px]"
-              :class="winner === 'x' ? 'text-[#31C3BD]' : 'text-[#F2B137]' ">TAKES THE ROUND</span>
+              :class="roundWinner === 'x' ? 'text-[#31C3BD]' : 'text-[#F2B137]' ">TAKES THE ROUND</span>
           </div>
         </div>
         <!-- DRAW -->
-        <div class="flex flex-col mb-[6px]" x-show="winner === ''">
+        <div class="flex flex-col mb-[6px]" x-show="gameOver && roundWinner === ''">
           <p
             class="md:text-[40px] font-bold md:leading-[1.25] md:tracking-[2.5px] text-[#A8BFC9] text-[24px] leading-[1.25] tracking-[1.5px]">
             ROUND TIED</p>
         </div>
         <div class="flex flex-row gap-[16px] text-[16px] font-bold leading-[1.25] tracking-[1px]">
           <button @click="gameMode='',toggleMenu(), restartGame(), resetScore() "
-            class="p-[16px] rounded-[10px] items-center bg-[#A8BFC9] shadow-[inset_0_-4px_0_0_#6B8997] duration-300 hover:bg-[#DBE8ED]">QUIT</button>
+            class="p-[16px] rounded-[10px] cursor-pointer items-center bg-[#A8BFC9] shadow-[inset_0_-4px_0_0_#6B8997] duration-300 hover:bg-[#DBE8ED]">QUIT</button>
           <button
-            class="p-[16px] duration-300 hover:bg-[#FFC860] rounded-[10px] items-center bg-[#F2B137] shadow-[inset_0_-4px_0_0_#CC8B13]"
+            class="p-[16px] duration-300 cursor-pointer hover:bg-[#FFC860] rounded-[10px] items-center bg-[#F2B137] shadow-[inset_0_-4px_0_0_#CC8B13]"
             @click="restartGame()">NEXT
             ROUND</button>
         </div>
       </div>
 
-      <div x-show="isRestart"
-        class="w-screen  h-[228px] md:h-[226px] flex flex-col text-center items-center justify-center gap-[24px] bg-[#1F3641] absolute top-50">
-        <!-- WIN/LOSE -->
-        <div class="flex flex-col gap-[16px]" x-show="winner !== ''">
+
+
+      <!-- restart banner -->
+      <div x-show="isRestart" x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="translate-x-full opacity-0" x-transition:enter-end="translate-x-0 opacity-100"
+        x-transition:leave="transition ease-in duration-200" x-transition:leave-start="translate-x-0 opacity-100"
+        x-transition:leave-end="translate-x-full opacity-0"
+        class="w-screen  h-[228px] md:h-[226px] flex flex-col text-center items-center justify-center gap-[24px] bg-[#1F3641] absolute top-50 top-50 lg:top-80 md:top-110">
+        <div class="flex flex-col gap-[16px]">
           <p
-            class="md:text-[16px] font-bold md:leading-[1.25] md:tracking-[1px] text-[#A8BFC9] text-[14px] leading-[1.3] tracking-[0.9px]">
+            class="md:text-[40px] font-bold md:leading-[1.25] md:tracking-[2.5px] text-[#A8BFC9] text-[24px] leading-[1.25] tracking-[1.5px]">
             RESTART GAME?</p>
         </div>
-        <!-- DRAW -->
+
         <div class="flex flex-row gap-[16px] text-[16px] font-bold leading-[1.25] tracking-[1px]">
-          <button @click="gameMode='',toggleMenu(), restartGame(), resetScore() "
-            class="p-[16px] rounded-[10px] items-center bg-[#A8BFC9] shadow-[inset_0_-4px_0_0_#6B8997] duration-300 hover:bg-[#DBE8ED]">NO, CANCEL</button>
+          <button @click="isRestart = !isRestart"
+            class="p-[16px] rounded-[10px]  items-center bg-[#A8BFC9] cursor-pointer shadow-[inset_0_-4px_0_0_#6B8997] duration-300 hover:bg-[#DBE8ED]">NO, CANCEL</button>
           <button
-            class="p-[16px] duration-300 hover:bg-[#FFC860] rounded-[10px] items-center bg-[#F2B137] shadow-[inset_0_-4px_0_0_#CC8B13]"
+            class="p-[16px] cursor-pointer duration-300 hover:bg-[#FFC860] rounded-[10px] items-center bg-[#F2B137] shadow-[inset_0_-4px_0_0_#CC8B13]"
             @click="restartGame()">YES, RESTART</button>
         </div>
       </div>
@@ -304,7 +326,7 @@
         patternWinner: [],
         gameOver: false,
         winner: "",
-
+        roundWinner: "",
         scoreX: 0,
         scoreO: 0,
         tie: 0,
@@ -378,6 +400,7 @@
           if (this.checkWinner(this.turn)) {
             this.gameOver = true
             this.winner = this.turn
+            this.roundWinner = this.turn
             this.score()
             return
           }
@@ -408,11 +431,13 @@
         },
 
         restartGame() {
+          this.gameOver = false
+          this.isRestart = false
           this.boards = [null, null, null, null, null, null, null, null, null]
           this.turn = "x"
-          this.gameOver = false
           this.winner = ""
-          this.isRestart = false
+          this.roundWinner = ""
+          this.patternWinner = []
           this.cpuPlay()
         }
 
@@ -425,7 +450,4 @@
 </html>
 
 <!-- TODO LIST -->
-<!-- 1. restart modal + function -->
-<!-- 2. animation banner && pick side -->
 <!-- 3. state when's cpu think-->
-<!-- 4. next round tie conflict-->
